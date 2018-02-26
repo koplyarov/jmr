@@ -1,0 +1,64 @@
+package jmr
+{
+    interface IRow
+    {
+        i32 GetI32Field(string column);
+        string GetStringField(string column);
+
+        void SetI32Field(string column, i32 value);
+        void SetStringField(string column, string value);
+    }
+
+    //struct RowWithMeta
+    //{
+    //    IRow Row;
+    //    u32 TableIndex;
+    //}
+
+    interface IRowReader
+    {
+        IRow ReadRow();
+    }
+
+    interface IRowWriter
+    {
+        void WriteRow(IRow row);
+    }
+
+    interface IMapper
+    {
+        void Process(IRowReader input, IRowWriter output);
+    }
+
+    interface IReducer
+    {
+        void Process(IRowReader input, IRowWriter output);
+    }
+
+    interface IOperation
+    {
+        void Abort();
+        void Join();
+    }
+
+    struct MapOpConfig
+    {
+        //string[] InputTables;
+        //string[] OutputTables;
+        string InputTable;
+        string OutputTable;
+    }
+
+    interface IClientSession
+    {
+        string GetVersionString();
+
+        IRow CreateRow();
+
+        IRowWriter CreateTable(string path);
+        IRowReader ReadTable(string path);
+
+        IOperation RunMap(MapOpConfig config, IMapper mapper);
+        //IOperation RunMapReduce(MapReduceOpConfig config, IMapper mapper, IReducer reducer);
+    }
+}

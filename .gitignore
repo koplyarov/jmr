@@ -1,0 +1,10 @@
+*.pyc
+*.swo
+*.swp
+/.buildSettings
+/.ci
+/.idea
+/build
+/test/java/Adapters.java
+tags
+types_*.taghl
