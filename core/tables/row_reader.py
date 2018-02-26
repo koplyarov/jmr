@@ -10,7 +10,9 @@ class RowReader(jmr_IRowReader):
 
     def ReadRow(self):
         try:
-            row_dict = next(self._table_iterator)
-            return self._joint_module.CreateComponent(jmr_IRow, Row, row_dict)
+            row_json_str = next(self._table_iterator)
+            row = self._joint_module.CreateComponent(jmr_IRow, Row)
+            row.DeserializeFromJson(row_json_str)
+            return row
         except StopIteration:
             return None

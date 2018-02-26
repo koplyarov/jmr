@@ -8,7 +8,4 @@ class RowWriter(jmr_IRowWriter):
         self._table = table
 
     def WriteRow(self, row):
-        row_dict = {
-            'num': row.GetI32Field('num')
-        }
-        self._table.append(row_dict)
+        self._table.append(row.SerializeToJson())

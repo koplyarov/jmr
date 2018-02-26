@@ -7,6 +7,9 @@ package jmr
 
         void SetI32Field(string column, i32 value);
         void SetStringField(string column, string value);
+
+        string SerializeToJson();
+        void DeserializeFromJson(string jsonString);
     }
 
     //struct RowWithMeta
@@ -32,7 +35,7 @@ package jmr
 
     interface IReducer
     {
-        void Process(IRowReader input, IRowWriter output);
+        void Process(string key, IRowReader input, IRowWriter output);
     }
 
     interface IOperation
@@ -43,8 +46,13 @@ package jmr
 
     struct MapOpConfig
     {
-        //string[] InputTables;
-        //string[] OutputTables;
+        string InputTable;
+        string OutputTable;
+    }
+
+    struct MapReduceOpConfig
+    {
+        string ReduceBy;
         string InputTable;
         string OutputTable;
     }
@@ -59,6 +67,6 @@ package jmr
         IRowReader ReadTable(string path);
 
         IOperation RunMap(MapOpConfig config, IMapper mapper);
-        //IOperation RunMapReduce(MapReduceOpConfig config, IMapper mapper, IReducer reducer);
+        IOperation RunMapReduce(MapReduceOpConfig config, IMapper mapper, IReducer reducer);
     }
 }

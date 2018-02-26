@@ -22,7 +22,7 @@ joint_add_module_content(core-component-py
 
 joint_add_module_content(core-component-py
     DIRECTORY Package/operation
-    FILES operation/__init__.py operation/map_operation.py
+    FILES operation/__init__.py operation/map_operation.py operation/map_reduce_operation.py
 )
 
 joint_add_module_content(core-component-py
