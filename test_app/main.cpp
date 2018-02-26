@@ -44,11 +44,11 @@ int main(int argc, const char** argv)
         ctx.MakeComponent<IMapper, MyMapper>()
     );
 
+    operation->Join();
+
     auto reader = clientSession->ReadTable("/output_table");
     while (auto row = reader->ReadRow())
         std::cout << "num: " << row->GetI32Field("num") << std::endl;
-
-    operation->Join();
 
     return 0;
 }
