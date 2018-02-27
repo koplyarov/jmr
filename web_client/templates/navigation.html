@@ -1,0 +1,13 @@
+<!doctype html>
+<title>JMR navigation</title>
+<body>
+    <h1>{{path}}</h1>
+{% if path != '/' %}
+    <a href="/navigation?path={{path_dirname(path)}}">..</a>
+    <br>
+{% endif %}
+{% for d in dirs %}
+    <a href="/navigation?path={{path_join(path, d)}}">{{d}}</a>
+    <br>
+{% endfor %}
+</body>
