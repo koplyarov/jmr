@@ -102,14 +102,14 @@ int main(int argc, const char** argv)
     }
 
     auto operation = clientSession->RunMapReduce(
-        MapReduceOpConfig{"word", "/input_documents", "/tmp/output_index"},
+        MapReduceOpConfig{"word", "/input_documents", "/output_index"},
         ctx.MakeComponent<IMapper, SplitToWordsMapper>(clientSession),
         ctx.MakeComponent<IReducer, BuildPathsListReducer>(clientSession)
     );
 
     operation->Join();
 
-    auto reader = clientSession->ReadTable("/tmp/output_index");
+    auto reader = clientSession->ReadTable("/output_index");
     while (auto row = reader->ReadRow())
         std::cout << row->SerializeToJson() << std::endl;
 
