@@ -1,72 +1,21 @@
+import io/IRow.idl
+import io/IRowReader.idl
+import io/IRowWriter.idl
+import operations/IOperation.idl
+import operations/Operations.idl
+
 package jmr
 {
-    interface IRow
-    {
-        i32 GetI32Field(string column);
-        string GetStringField(string column);
-
-        void SetI32Field(string column, i32 value);
-        void SetStringField(string column, string value);
-
-        string SerializeToJson();
-        void DeserializeFromJson(string jsonString);
-    }
-
-    //struct RowWithMeta
-    //{
-    //    IRow Row;
-    //    u32 TableIndex;
-    //}
-
-    interface IRowReader
-    {
-        IRow ReadRow();
-    }
-
-    interface IRowWriter
-    {
-        void WriteRow(IRow row);
-    }
-
-    interface IMapper
-    {
-        void Process(IRowReader input, IRowWriter output);
-    }
-
-    interface IReducer
-    {
-        void Process(string key, IRowReader input, IRowWriter output);
-    }
-
-    interface IOperation
-    {
-        void Abort();
-        void Join();
-    }
-
-    struct MapOpConfig
-    {
-        string InputTable;
-        string OutputTable;
-    }
-
-    struct MapReduceOpConfig
-    {
-        string ReduceBy;
-        string InputTable;
-        string OutputTable;
-    }
-
     interface IClientSession
     {
         string GetVersionString();
 
-        IRow CreateRow();
+        io.IRow CreateRow();
 
-        IRowWriter CreateTable(string path);
-        IRowReader ReadTable(string path);
+        io.IRowWriter CreateTable(string path);
+        io.IRowReader ReadTable(string path);
 
-        IOperation RunMap(MapOpConfig config, IMapper mapper);
-        IOperation RunMapReduce(MapReduceOpConfig config, IMapper mapper, IReducer reducer);
+        operations.IOperation RunMap(operations.MapOpConfig config, operations.IMapper mapper);
+        operations.IOperation RunMapReduce(operations.MapReduceOpConfig config, operations.IMapper mapper, operations.IReducer reducer);
     }
 }

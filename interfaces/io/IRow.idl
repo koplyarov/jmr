@@ -1,0 +1,20 @@
+package jmr.io
+{
+    interface IRow
+    {
+        i32 GetI32Field(string column);
+        string GetStringField(string column);
+
+        void SetI32Field(string column, i32 value);
+        void SetStringField(string column, string value);
+
+        string SerializeToJson();
+        void DeserializeFromJson(string jsonString);
+    }
+
+    //struct RowWithMeta
+    //{
+    //    IRow Row;
+    //    u32 TableIndex;
+    //}
+}

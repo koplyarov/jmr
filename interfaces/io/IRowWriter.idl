@@ -1,0 +1,9 @@
+import io/IRow.idl
+
+package jmr.io
+{
+    interface IRowWriter
+    {
+        void WriteRow(IRow row);
+    }
+}

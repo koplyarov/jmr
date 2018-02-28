@@ -1,7 +1,7 @@
 from ..joint_adapters import *
 
 
-class MapReduceOperation(jmr_IOperation):
+class MapReduceOperation(jmr_operations_IOperation):
     def Abort(self):
         pass
 

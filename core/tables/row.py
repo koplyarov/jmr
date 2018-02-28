@@ -3,7 +3,7 @@ import json
 from ..joint_adapters import *
 
 
-class Row(jmr_IRow):
+class Row(jmr_io_IRow):
     def __init__(self):
         super(Row, self).__init__()
         self._row_dict = {}

@@ -1,0 +1,29 @@
+import io/IRowReader.idl
+import io/IRowWriter.idl
+
+package jmr.operations
+{
+    interface IMapper
+    {
+        void Process(io.IRowReader input, io.IRowWriter output);
+    }
+
+    interface IReducer
+    {
+        void Process(string key, io.IRowReader input, io.IRowWriter output);
+    }
+
+    struct MapOpConfig
+    {
+        string InputTable;
+        string OutputTable;
+    }
+
+    struct MapReduceOpConfig
+    {
+        string ReduceBy;
+        string InputTable;
+        string OutputTable;
+    }
+
+}

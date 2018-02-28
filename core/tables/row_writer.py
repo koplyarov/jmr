@@ -2,7 +2,7 @@ from ..joint_adapters import *
 from .row import Row
 
 
-class RowWriter(jmr_IRowWriter):
+class RowWriter(jmr_io_IRowWriter):
     def __init__(self, table):
         super(RowWriter, self).__init__()
         self._table = table

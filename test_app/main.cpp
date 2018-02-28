@@ -7,6 +7,8 @@
 
 
 using namespace jmr;
+using namespace jmr::io;
+using namespace jmr::operations;
 using namespace joint;
 
 
