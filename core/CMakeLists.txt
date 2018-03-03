@@ -1,6 +1,4 @@
-joint_generate_adapters(python joint_adapters.py
-    ${IDL_DIR}/IClient.idl
-)
+joint_generate_adapters(python joint_adapters.py ${IDL_FILES})
 
 add_custom_target(core-adapters-py ALL DEPENDS joint_adapters.py)
 
@@ -18,6 +16,11 @@ joint_add_module_content(core-component-py
 joint_add_module_content(core-component-py
     DIRECTORY Package/client
     FILES client/__init__.py client/client_session.py
+)
+
+joint_add_module_content(core-component-py
+    DIRECTORY Package/fs
+    FILES fs/__init__.py fs/directory.py fs/table.py
 )
 
 joint_add_module_content(core-component-py

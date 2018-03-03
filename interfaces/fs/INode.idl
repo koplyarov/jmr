@@ -1,0 +1,16 @@
+package jmr.fs
+{
+    interface INode
+    {
+        string GetName();
+    }
+
+    interface IDirectory : INode
+    {
+        INode[] GetChildren();
+    }
+
+    interface ITable : INode
+    {
+    }
+}

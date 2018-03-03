@@ -5,7 +5,7 @@ set(JOINT_MODULE_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 set(DEPLOY_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/jmr_web_client")
 
-joint_generate_adapters(python joint_adapters.py ${IDL_DIR}/IClient.idl)
+joint_generate_adapters(python joint_adapters.py ${IDL_FILES})
 add_custom_target(jmr_web_client_adapters_py ALL DEPENDS joint_adapters.py)
 
 set(WEB_CLIENT_FILES

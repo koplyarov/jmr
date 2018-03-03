@@ -14,7 +14,7 @@ else()
     add_definitions(-std=c++11)
 endif()
 
-joint_generate_adapters(c++ adapters.hpp ${IDL_DIR}/IClient.idl)
+joint_generate_adapters(c++ adapters.hpp ${IDL_FILES})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_executable(test_app adapters.hpp main.cpp)

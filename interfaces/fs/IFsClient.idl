@@ -1,0 +1,9 @@
+import fs/INode.idl
+
+package jmr.fs
+{
+    interface IFsClient
+    {
+        IDirectory GetFsRoot();
+    }
+}

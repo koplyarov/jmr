@@ -1,3 +1,4 @@
+import fs/IFsClient.idl
 import io/IRow.idl
 import io/IRowReader.idl
 import io/IRowWriter.idl
@@ -6,7 +7,7 @@ import operations/Operations.idl
 
 package jmr
 {
-    interface IClientSession
+    interface IClientSession : fs.IFsClient
     {
         string GetVersionString();
 
@@ -15,7 +16,15 @@ package jmr
         io.IRowWriter CreateTable(string path);
         io.IRowReader ReadTable(string path);
 
-        operations.IOperation RunMap(operations.MapOpConfig config, operations.IMapper mapper);
-        operations.IOperation RunMapReduce(operations.MapReduceOpConfig config, operations.IMapper mapper, operations.IReducer reducer);
+        operations.IOperation RunMap (
+            operations.MapOpConfig config,
+            operations.IMapper mapper
+        );
+
+        operations.IOperation RunMapReduce(
+            operations.MapReduceOpConfig config,
+            operations.IMapper mapper,
+            operations.IReducer reducer
+        );
     }
 }
