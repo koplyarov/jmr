@@ -1,6 +1,8 @@
+import json
 import os
 import pyjoint_loader
 
+from fake_db_activity import make_fake_db_activity
 from joint_adapters import *
 
 from flask import Flask
@@ -13,12 +15,7 @@ Bootstrap(app)
 
 core = pyjoint_loader.LoadModule('../core/Core.jm')
 client = core.GetRootObject(jmr_IClient, 'MakeClient')
-
-client.CreateTable("/home/user1/doc1");
-client.CreateTable("/home/user1/doc2");
-client.CreateTable("/home/user2/whatever");
-client.CreateTable("/tmp/ergnsgoin34");
-
+make_fake_db_activity(client)
 
 navigation_entries = [
     {'id': 'navigation', 'href': '/navigation', 'title': 'Navigation'},
@@ -48,22 +45,55 @@ def navigation():
     assert path.startswith('/')
     parsed_path = path.split('/')
 
-    cur_dir = pyjoint.Cast(client, jmr_fs_IFsClient).GetFsRoot()
+    def get_next_node(dir, name):
+        return next(c for c in dir.GetChildren() if c.GetName() == name)
+
+    node = pyjoint.Cast(client, jmr_fs_IFsClient).GetFsRoot()
     for path_entry in parsed_path:
         if path_entry:
-            next_node = next(c for c in cur_dir.GetChildren() if c.GetName() == path_entry)
-            cur_dir = pyjoint.Cast(next_node, jmr_fs_IDirectory)
+            node = get_next_node(pyjoint.Cast(node, jmr_fs_IDirectory), path_entry)
 
-    return render_template(
-        'navigation.html',
-        nav_entries=navigation_entries,
-        nav_active='navigation',
-        version=client.GetVersionString(),
-        path=path,
-        dirs=sorted([c.GetName() for c in cur_dir.GetChildren()]),
-        path_join=os.path.join,
-        path_dirname=os.path.dirname
-    )
+    directory = pyjoint.Cast(node, jmr_fs_IDirectory)
+    table = pyjoint.Cast(node, jmr_fs_ITable)
+
+    if directory:
+        return render_template(
+            'navigation-dir.html',
+            nav_entries=navigation_entries,
+            nav_active='navigation',
+            version=client.GetVersionString(),
+            path=path,
+            dirs=sorted([c.GetName() for c in directory.GetChildren()]),
+            path_join=os.path.join,
+            path_dirname=os.path.dirname
+        )
+    elif table:
+        columns_set = set()
+        py_dict_rows = []
+        reader = client.ReadTable(path)
+        row = reader.ReadRow()
+        while row:
+            py_row = json.loads(row.SerializeToJson())
+            columns_set = columns_set.union({col for col in py_row})
+            py_dict_rows.append(py_row)
+            row = reader.ReadRow()
+
+        columns_list = sorted(columns_set)
+        py_list_rows = [[r.get(c, None) for c in columns_list] for r in py_dict_rows]
+
+        return render_template(
+            'navigation-table.html',
+            nav_entries=navigation_entries,
+            nav_active='navigation',
+            version=client.GetVersionString(),
+            path=path,
+            columns=columns_list,
+            rows=py_list_rows,
+            path_join=os.path.join,
+            path_dirname=os.path.dirname
+        )
+    else:
+        raise RuntimeError('Unknown node type')
 
 
 @app.route('/operations', strict_slashes=False)

@@ -1,4 +1,5 @@
 from ..joint_adapters import *
+from .table import Table
 
 import pyjoint
 
@@ -18,5 +19,11 @@ class Directory(jmr_fs_IDirectory):
     def GetChildren(self):
         result = pyjoint.Array(jmr_fs_INode_typeDescriptor, len(self._dir_dict))
         for i, name in enumerate(self._dir_dict):
-            result[i] = self._module.CreateComponent(jmr_fs_INode, Directory, self._module, name, self._dir_dict[name])
+            entry = self._dir_dict[name]
+            if isinstance(entry, list):
+                result[i] = self._module.CreateComponent(jmr_fs_INode, Table, name)
+            elif isinstance(entry, dict):
+                result[i] = self._module.CreateComponent(jmr_fs_INode, Directory, self._module, name, entry)
+            else:
+                raise RuntimeError('Unknown directory entry type: {}'.format(type(entry)))
         return result

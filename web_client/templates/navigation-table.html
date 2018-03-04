@@ -1,0 +1,34 @@
+{%  extends "base.html" %}
+
+{%  block title %}
+JMR {{path}}
+{%  endblock %}
+
+{%  block content %}
+<div class="container">
+    <div class="heading">
+        <h3>{{path}}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item list-group-item-action" href="/navigation?path={{path_dirname(path)}}">Back to {{path_dirname(path)}}</a>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+{%      for col in columns %}
+                <th>{{col}}</th>
+{%      endfor %}
+            </tr>
+        </thead>
+        <tbody>
+{%      for row in rows %}
+            <tr>
+{%          for cell in row %}
+                <td>{{cell}}</td>
+{%          endfor %}
+            </tr>
+{%      endfor %}
+        </tbody>
+    </table>
+</div>
+{%  endblock %}

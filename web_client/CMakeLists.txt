@@ -10,8 +10,10 @@ add_custom_target(jmr_web_client_adapters_py ALL DEPENDS joint_adapters.py)
 
 set(WEB_CLIENT_FILES
     web_client.py
+    fake_db_activity.py
     templates/base.html
-    templates/navigation.html
+    templates/navigation-dir.html
+    templates/navigation-table.html
     templates/operations.html
     templates/version.html
 )
