@@ -1,6 +1,6 @@
 from .joint_adapters import *
-from .client import ClientSession
+from .client import Client
 
 
-def MakeClientSession(joint_module):
-    return joint_module.CreateComponent(joint_IObject, ClientSession, joint_module)
+def MakeClient(joint_module):
+    return joint_module.CreateComponent(joint_IObject, Client, joint_module)

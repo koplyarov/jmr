@@ -15,13 +15,13 @@ using namespace joint;
 class SplitToWordsMapper
 {
 private:
-    IClientSession_Ptr _clientSession;
+    IClient_Ptr _client;
 
 public:
     using JointInterfaces = TypeList<IMapper>;
 
-    SplitToWordsMapper(IClientSession_Ref clientSession)
-        : _clientSession(clientSession)
+    SplitToWordsMapper(IClient_Ref client)
+        : _client(client)
     { }
 
     void Process(IRowReader_Ref input, IRowWriter_Ref output)
@@ -33,7 +33,7 @@ public:
 
             for (const auto& word : SplitString(content, ' '))
             {
-                auto outRow = _clientSession->CreateRow();
+                auto outRow = _client->CreateRow();
                 outRow->SetStringField("path", path);
                 outRow->SetStringField("word", word);
                 output->WriteRow(outRow);
@@ -46,13 +46,13 @@ public:
 class BuildPathsListReducer
 {
 private:
-    IClientSession_Ptr _clientSession;
+    IClient_Ptr _client;
 
 public:
     using JointInterfaces = TypeList<IReducer>;
 
-    BuildPathsListReducer(IClientSession_Ref clientSession)
-        : _clientSession(clientSession)
+    BuildPathsListReducer(IClient_Ref client)
+        : _client(client)
     { }
 
     void Process(StringRef key, IRowReader_Ref input, IRowWriter_Ref output)
@@ -69,7 +69,7 @@ public:
         for (const auto& path : paths)
             pathsStr += path + " ";
 
-        auto outRow = _clientSession->CreateRow();
+        auto outRow = _client->CreateRow();
         outRow->SetStringField("_word", key);
         outRow->SetStringField("paths", String(pathsStr));
         output->WriteRow(outRow);
@@ -90,28 +90,28 @@ int main(int argc, const char** argv)
 
     joint::Context ctx;
     joint::Module m(executableDir + "/core/Core.jm");
-    auto clientSession = m.GetRootObject<IClientSession>("MakeClientSession");
+    auto client = m.GetRootObject<IClient>("MakeClient");
 
-    std::cout << clientSession->GetVersionString() << std::endl;
+    std::cout << client->GetVersionString() << std::endl;
 
-    auto writer = clientSession->CreateTable("/input_documents");
+    auto writer = client->CreateTable("/input_documents");
     for (const auto& doc_pair : documents)
     {
-        auto row = clientSession->CreateRow();
+        auto row = client->CreateRow();
         row->SetStringField("path", doc_pair.first);
         row->SetStringField("content", doc_pair.second);
         writer->WriteRow(row);
     }
 
-    auto operation = clientSession->RunMapReduce(
+    auto operation = client->RunMapReduce(
         MapReduceOpConfig{"word", "/input_documents", "/output_index"},
-        ctx.MakeComponent<IMapper, SplitToWordsMapper>(clientSession),
-        ctx.MakeComponent<IReducer, BuildPathsListReducer>(clientSession)
+        ctx.MakeComponent<IMapper, SplitToWordsMapper>(client),
+        ctx.MakeComponent<IReducer, BuildPathsListReducer>(client)
     );
 
     operation->Join();
 
-    auto reader = clientSession->ReadTable("/output_index");
+    auto reader = client->ReadTable("/output_index");
     while (auto row = reader->ReadRow())
         std::cout << row->SerializeToJson() << std::endl;
 

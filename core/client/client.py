@@ -8,9 +8,9 @@ from ..storage import MemoryStorage
 from ..tables import Row, RowReader, RowWriter
 
 
-class ClientSession(jmr_IClientSession):
+class Client(jmr_IClient):
     def __init__(self, joint_module):
-        super(ClientSession, self).__init__()
+        super(Client, self).__init__()
         self._module = joint_module
         self._storage = MemoryStorage()
 

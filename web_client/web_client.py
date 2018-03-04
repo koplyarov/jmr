@@ -12,12 +12,12 @@ app = Flask(__name__)
 Bootstrap(app)
 
 core = pyjoint_loader.LoadModule('../core/Core.jm')
-client_session = core.GetRootObject(jmr_IClientSession, 'MakeClientSession')
+client = core.GetRootObject(jmr_IClient, 'MakeClient')
 
-client_session.CreateTable("/home/user1/doc1");
-client_session.CreateTable("/home/user1/doc2");
-client_session.CreateTable("/home/user2/whatever");
-client_session.CreateTable("/tmp/ergnsgoin34");
+client.CreateTable("/home/user1/doc1");
+client.CreateTable("/home/user1/doc2");
+client.CreateTable("/home/user2/whatever");
+client.CreateTable("/tmp/ergnsgoin34");
 
 
 navigation_entries = [
@@ -38,7 +38,7 @@ def version():
         'version.html',
         nav_entries=navigation_entries,
         nav_active='version',
-        version=client_session.GetVersionString()
+        version=client.GetVersionString()
     )
 
 
@@ -48,7 +48,7 @@ def navigation():
     assert path.startswith('/')
     parsed_path = path.split('/')
 
-    cur_dir = pyjoint.Cast(client_session, jmr_fs_IFsClient).GetFsRoot()
+    cur_dir = pyjoint.Cast(client, jmr_fs_IFsClient).GetFsRoot()
     for path_entry in parsed_path:
         if path_entry:
             next_node = next(c for c in cur_dir.GetChildren() if c.GetName() == path_entry)
@@ -58,7 +58,7 @@ def navigation():
         'navigation.html',
         nav_entries=navigation_entries,
         nav_active='navigation',
-        version=client_session.GetVersionString(),
+        version=client.GetVersionString(),
         path=path,
         dirs=sorted([c.GetName() for c in cur_dir.GetChildren()]),
         path_join=os.path.join,
@@ -72,6 +72,6 @@ def operations():
         'operations.html',
         nav_entries=navigation_entries,
         nav_active='operations',
-        version=client_session.GetVersionString()
+        version=client.GetVersionString()
     )
 

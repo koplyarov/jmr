@@ -7,7 +7,7 @@ import operations/Operations.idl
 
 package jmr
 {
-    interface IClientSession : fs.IFsClient
+    interface IClient : fs.IFsClient
     {
         string GetVersionString();
 

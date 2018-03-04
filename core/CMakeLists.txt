@@ -15,7 +15,7 @@ joint_add_module_content(core-component-py
 
 joint_add_module_content(core-component-py
     DIRECTORY Package/client
-    FILES client/__init__.py client/client_session.py
+    FILES client/__init__.py client/client.py
 )
 
 joint_add_module_content(core-component-py
