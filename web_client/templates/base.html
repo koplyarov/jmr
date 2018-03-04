@@ -1,0 +1,27 @@
+{%  extends "bootstrap/base.html" %}
+
+{%  block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/jmr.css')}}">
+{%  endblock %}
+
+{%  block body %}
+<header>
+</header>
+{{super()}}
+{%  endblock %}
+
+{%  block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">JMR</a>
+        </div>
+        <ul class="nav navbar-nav">
+{%  for e in nav_entries %}
+            <li {{'class=active' if nav_active == e['id']}}><a href="{{e['href']}}">{{e['title']}}</a></li>
+{%  endfor %}
+        </ul>
+    </div>
+</nav>
+{%  endblock %}

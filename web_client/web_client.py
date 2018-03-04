@@ -4,10 +4,13 @@ import pyjoint_loader
 from joint_adapters import *
 
 from flask import Flask
-from flask import render_template, request
+from flask import redirect, render_template, request
+from flask_bootstrap import Bootstrap
 
 
 app = Flask(__name__)
+Bootstrap(app)
+
 core = pyjoint_loader.LoadModule('../core/Core.jm')
 client_session = core.GetRootObject(jmr_IClientSession, 'MakeClientSession')
 
@@ -17,16 +20,29 @@ client_session.CreateTable("/home/user2/whatever");
 client_session.CreateTable("/tmp/ergnsgoin34");
 
 
+navigation_entries = [
+    {'id': 'navigation', 'href': '/navigation', 'title': 'Navigation'},
+    {'id': 'operations', 'href': '/operations', 'title': 'Operations'},
+    {'id': 'version', 'href': '/version', 'title': 'Version'}
+]
+
+
 @app.route('/')
 def index():
+    return redirect('/navigation')
+
+
+@app.route('/version')
+def version():
     return render_template(
-        'index.html',
+        'version.html',
+        nav_entries=navigation_entries,
+        nav_active='version',
         version=client_session.GetVersionString()
     )
 
 
-@app.route('/navigation')
-@app.route('/navigation/')
+@app.route('/navigation', strict_slashes=False)
 def navigation():
     path = request.args.get('path', '/')
     assert path.startswith('/')
@@ -40,9 +56,22 @@ def navigation():
 
     return render_template(
         'navigation.html',
+        nav_entries=navigation_entries,
+        nav_active='navigation',
         version=client_session.GetVersionString(),
         path=path,
-        dirs=[c.GetName() for c in cur_dir.GetChildren()],
+        dirs=sorted([c.GetName() for c in cur_dir.GetChildren()]),
         path_join=os.path.join,
         path_dirname=os.path.dirname
     )
+
+
+@app.route('/operations', strict_slashes=False)
+def operations():
+    return render_template(
+        'operations.html',
+        nav_entries=navigation_entries,
+        nav_active='operations',
+        version=client_session.GetVersionString()
+    )
+
