@@ -23,9 +23,9 @@ class MemoryStorage(object):
         parsed_path = self._parse_path(path)
         current_dir = self._root_dir
         for dir in parsed_path[:-1]:
-            current_dir = self._root_dir[dir]
+            current_dir = current_dir[dir]
 
-        return current_dir[path]
+        return current_dir[parsed_path[-1]]
 
     def _parse_path(self, path):
         assert path.startswith('/')
